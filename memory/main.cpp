@@ -3,6 +3,7 @@
 #include <tlm>
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
+
 #include <iostream>
 #include <cstdlib> // For rand()
 #include <ctime>   // For seeding rand()
@@ -88,9 +89,6 @@ SC_MODULE(MemoryModule) {
         std::cout << "Bandwidth Utilization: " << bandwidth_mb << " MB/second" << std::endl;
     }
 };
-
-#include <cstdlib> // For rand()
-#include <ctime>   // For seeding rand()
 
 SC_MODULE(TrafficGenerator) {
     tlm_utils::simple_initiator_socket<TrafficGenerator> initiator_socket;
@@ -198,9 +196,8 @@ SC_MODULE(TopModule) {
 
 int sc_main(int argc, char* argv[]) {
     TopModule top("TopModule");
-    const unsigned int max_cycles = 100000; // Total number of cycles
-    const sc_time clock_period = sc_time(10, SC_NS); // Clock period
-    sc_start(max_cycles * clock_period); // Run simulation for the required number of cycles
+    const sc_time sim_period = sc_time(1, SC_MS); // Clock period
+    sc_start(sim_period); // Run simulation for the required number of cycles
 
     sc_stop();   // Stop simulation
     return 0;
