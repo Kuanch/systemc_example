@@ -97,12 +97,10 @@ SC_MODULE(TrafficGenerator) {
     sc_in<bool> clock; // Clock input
 
     const sc_time cycle_period = sc_time(10, SC_NS); // Clock period
-    unsigned int max_cycles; // Maximum number of cycles (transactions)
-    unsigned int current_cycle; // Current cycle number
     const unsigned int memory_size = 1024;       // Memory size (bytes)
     const unsigned int max_burst_length = 16;   // Maximum burst length (bytes)
 
-    SC_CTOR(TrafficGenerator) : max_cycles(10000), current_cycle(0) {
+    SC_CTOR(TrafficGenerator) {
         SC_THREAD(generate_traffic); // Thread to generate traffic
         srand(static_cast<unsigned>(time(nullptr))); // Seed random number generator
         sensitive << clock.pos();
@@ -110,13 +108,13 @@ SC_MODULE(TrafficGenerator) {
 
     // Constructor with parameter to set max cycles
     TrafficGenerator(sc_module_name name, unsigned int cycles)
-        : sc_module(name), max_cycles(cycles), current_cycle(0) {
+        : sc_module(name) {
         SC_THREAD(generate_traffic);
         srand(static_cast<unsigned>(time(nullptr)));
     }
 
     void generate_traffic() {
-        while (current_cycle < max_cycles) {
+        while (true) {
             // Wait for clock edge
             wait();
             // Randomly decide between read and write
@@ -179,8 +177,6 @@ SC_MODULE(TrafficGenerator) {
                 break;
             }
 
-            // Increment cycle count
-            current_cycle++;
         }
     }
 };
@@ -202,7 +198,7 @@ SC_MODULE(TopModule) {
 
 int sc_main(int argc, char* argv[]) {
     TopModule top("TopModule");
-    const unsigned int max_cycles = 10000; // Total number of cycles
+    const unsigned int max_cycles = 100000; // Total number of cycles
     const sc_time clock_period = sc_time(10, SC_NS); // Clock period
     sc_start(max_cycles * clock_period); // Run simulation for the required number of cycles
 
