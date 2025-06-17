@@ -33,6 +33,3 @@ After compilation, run the example:
 ./main
 ```
 
-## Contributing
-
-Future examples are planned. Feel free to submit pull requests with additional SystemC modules or improvements to the existing code.
